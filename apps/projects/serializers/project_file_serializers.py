@@ -18,7 +18,7 @@ class AllProjectFilesSerializer(serializers.ModelSerializer):
 class CreateProjectFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectFile
-        fields = ('file_name',)
+        fields = ('file_name', 'file_path')
 
     def validate_file_name(self, value: str) -> str:
         if not value.isascii():
@@ -27,16 +27,24 @@ class CreateProjectFileSerializer(serializers.ModelSerializer):
             )
         if not check_extension(value):
             raise serializers.ValidationError(
-                "Valid file extensions: ['.csv', '.doc', '.pdf', '.xlsx']"
+                "Valid file extensions: ['.csv', '.doc', '.pdf', '.xlsx', '.py']"
             )
 
         return value
+
+    # def validate_file_path(self, value: str) -> str:
+    #     if not check_extension(value):
+    #         raise serializers.ValidationError(
+    #             "Valid file extensions: ['.csv', '.doc', '.pdf', '.xlsx', '.py']"
+    #         )
+    #
+    #     return value
 
     def create(self, validated_data):
         file_path = create_file_path(
             file_name=validated_data['file_name']
         )
-        raw_file = self.context.get('raw_file')
+        raw_file = self.context['request'].FILES['file_path']
 
         if check_file_size(file=raw_file):
             save_file(file_path=file_path, file_content=raw_file)
