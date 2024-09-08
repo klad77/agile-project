@@ -28,13 +28,13 @@ class CreateProjectFileSerializer(serializers.ModelSerializer):
 
         return value
 
-    # def validate_file_path(self, value: str) -> str:
-    #     if not check_extension(value):
-    #         raise serializers.ValidationError(
-    #             "Valid file extensions: ['.csv', '.doc', '.pdf', '.xlsx', '.py']"
-    #         )
-    #
-    #     return value
+    def validate_file_path(self, value: str) -> str:
+        if not check_extension(value.name):
+            raise serializers.ValidationError(
+                "Valid file extensions: ['.csv', '.doc', '.pdf', '.xlsx', '.py']"
+            )
+
+        return value
 
     def create(self, validated_data):
         file_path = create_file_path(
