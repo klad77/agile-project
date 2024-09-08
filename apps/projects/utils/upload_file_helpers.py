@@ -41,3 +41,7 @@ def save_file(file_path, file_content):
             f.write(chunk)
 
     return file_path
+
+
+def delete_file(file_path):
+    os.remove(os.path.realpath(file_path))
