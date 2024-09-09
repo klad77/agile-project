@@ -1,9 +1,9 @@
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.generics import ListAPIView, CreateAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
 from apps.users.models import User
-from apps.users.serializers.user_serializers import UserListSerializer, RegisterUserSerializer
+from apps.users.serializers.user_serializers import *
 
 
 class UserListGenericView(ListAPIView):
@@ -43,3 +43,9 @@ class RegisterUserGenericView(CreateAPIView):
         serializer.save()
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class UserDetailRetrieveGenericView(RetrieveAPIView):
+    serializer_class = UserDetailSerializer
+    queryset = User.objects.all()
+    
